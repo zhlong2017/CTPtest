@@ -26,6 +26,7 @@ time_t lOrderOkTime;
 
 void CustomTradeSpi::OnFrontConnected()
 {
+	std::cout << "OnFrontConnected" << std::endl;
 	std::cout << "=====建立网络连接成功=====" << std::endl;
 	// 开始登录
 	reqUserLogin();
@@ -37,6 +38,7 @@ void CustomTradeSpi::OnRspUserLogin(
 	int nRequestID,
 	bool bIsLast)
 {
+	std::cout << "OnRspUserLogin" << std::endl;
 	if (!isErrorRspInfo(pRspInfo))
 	{
 		std::cout << "=====账户登录成功=====" << std::endl;
@@ -57,19 +59,22 @@ void CustomTradeSpi::OnRspUserLogin(
 
 void CustomTradeSpi::OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
+	std::cout << "OnRspError" << std::endl;
 	isErrorRspInfo(pRspInfo);
 }
 
 void CustomTradeSpi::OnFrontDisconnected(int nReason)
 {
-	std::cerr << "=====网络连接断开=====" << std::endl;
-	std::cerr << "错误码： " << nReason << std::endl;
+	std::cout << "OnFrontDisconnected" << std::endl;
+	std::cout << "=====网络连接断开=====" << std::endl;
+	std::cout << "错误码： " << nReason << std::endl;
 }
 
 void CustomTradeSpi::OnHeartBeatWarning(int nTimeLapse)
 {
-	std::cerr << "=====网络心跳超时=====" << std::endl;
-	std::cerr << "距上次连接时间： " << nTimeLapse << std::endl;
+	std::cout << "OnHeartBeatWarning" << std::endl;
+	std::cout << "=====网络心跳超时=====" << std::endl;
+	std::cout << "距上次连接时间： " << nTimeLapse << std::endl;
 }
 
 void CustomTradeSpi::OnRspUserLogout(
@@ -78,6 +83,7 @@ void CustomTradeSpi::OnRspUserLogout(
 	int nRequestID,
 	bool bIsLast)
 {
+	std::cout << "OnRspUserLogout" << std::endl;
 	if (!isErrorRspInfo(pRspInfo))
 	{
 		loginFlag = false; // 登出就不能再交易了 
@@ -93,6 +99,7 @@ void CustomTradeSpi::OnRspSettlementInfoConfirm(
 	int nRequestID,
 	bool bIsLast)
 {
+	std::cout << "OnRspSettlementInfoConfirm" << std::endl;
 	if (!isErrorRspInfo(pRspInfo))
 	{
 		std::cout << "=====投资者结算结果确认成功=====" << std::endl;
@@ -109,7 +116,8 @@ void CustomTradeSpi::OnRspQryInstrument(
 	int nRequestID,
 	bool bIsLast)
 {
-	if (!isErrorRspInfo(pRspInfo))
+	std::cout << "OnRspQryInstrument" << std::endl;
+	if (isErrorRspInfo(pRspInfo))
 	{
 		std::cout << "=====查询合约结果成功=====" << std::endl;
 		std::cout << "交易所代码： " << pInstrument->ExchangeID << std::endl;
@@ -129,6 +137,7 @@ void CustomTradeSpi::OnRspQryTradingAccount(
 	int nRequestID,
 	bool bIsLast)
 {
+	std::cout << "OnRspQryTradingAccount" << std::endl;
 	if (!isErrorRspInfo(pRspInfo))
 	{
 		std::cout << "=====查询投资者资金账户成功=====" << std::endl;
@@ -148,6 +157,7 @@ void CustomTradeSpi::OnRspQryInvestorPosition(
 	int nRequestID,
 	bool bIsLast)
 {
+	std::cout << "OnRspQryInvestorPosition" << std::endl;
 	if (!isErrorRspInfo(pRspInfo))
 	{
 		std::cout << "=====查询投资者持仓成功=====" << std::endl;
@@ -181,6 +191,7 @@ void CustomTradeSpi::OnRspOrderInsert(
 	int nRequestID,
 	bool bIsLast)
 {
+	std::cout << "OnRspOrderInsert" << std::endl;
 	if (!isErrorRspInfo(pRspInfo))
 	{
 		std::cout << "=====报单录入成功=====" << std::endl;
@@ -197,6 +208,7 @@ void CustomTradeSpi::OnRspOrderAction(
 	int nRequestID,
 	bool bIsLast)
 {
+	std::cout << "OnRspOrderAction" << std::endl;
 	if (!isErrorRspInfo(pRspInfo))
 	{
 		std::cout << "=====报单操作成功=====" << std::endl;
@@ -207,6 +219,7 @@ void CustomTradeSpi::OnRspOrderAction(
 
 void CustomTradeSpi::OnRtnOrder(CThostFtdcOrderField *pOrder)
 {
+	std::cout << "OnRtnOrder" << std::endl;
 	char str[10];
 	sprintf(str, "%d", pOrder->OrderSubmitStatus);
 	int orderState = atoi(str) - 48;	//报单状态0=已经提交，3=已经接受
@@ -228,6 +241,7 @@ void CustomTradeSpi::OnRtnOrder(CThostFtdcOrderField *pOrder)
 
 void CustomTradeSpi::OnRtnTrade(CThostFtdcTradeField *pTrade)
 {
+	std::cout << "OnRtnTrade" << std::endl;
 	std::cout << "=====报单成功成交=====" << std::endl;
 	std::cout << "成交时间： " << pTrade->TradeTime << std::endl;
 	std::cout << "合约代码： " << pTrade->InstrumentID << std::endl;
@@ -238,14 +252,16 @@ void CustomTradeSpi::OnRtnTrade(CThostFtdcTradeField *pTrade)
 
 bool CustomTradeSpi::isErrorRspInfo(CThostFtdcRspInfoField *pRspInfo)
 {
+	std::cout << "isErrorRspInfo" << std::endl;
 	bool bResult = pRspInfo && (pRspInfo->ErrorID != 0);
 	if (bResult)
-		std::cerr << "返回错误--->>> ErrorID=" << pRspInfo->ErrorID << ", ErrorMsg=" << pRspInfo->ErrorMsg << std::endl;
+		std::cout << "返回错误--->>> ErrorID=" << pRspInfo->ErrorID << ", ErrorMsg=" << pRspInfo->ErrorMsg << std::endl;
 	return bResult;
 }
 
 void CustomTradeSpi::reqUserLogin()
 {
+	std::cout << "reqUserLogin" << std::endl;
 	CThostFtdcReqUserLoginField loginReq;
 	memset(&loginReq, 0, sizeof(loginReq));
 	strcpy(loginReq.BrokerID, gBrokerID);
@@ -256,11 +272,12 @@ void CustomTradeSpi::reqUserLogin()
 	if (!rt)
 		std::cout << ">>>>>>发送登录请求成功" << std::endl;
 	else
-		std::cerr << "--->>>发送登录请求失败" << std::endl;
+		std::cout << "--->>>发送登录请求失败" << std::endl;
 }
 
 void CustomTradeSpi::reqUserLogout()
 {
+	std::cout << "reqUserLogout" << std::endl;
 	CThostFtdcUserLogoutField logoutReq;
 	memset(&logoutReq, 0, sizeof(logoutReq));
 	strcpy(logoutReq.BrokerID, gBrokerID);
@@ -270,12 +287,13 @@ void CustomTradeSpi::reqUserLogout()
 	if (!rt)
 		std::cout << ">>>>>>发送登出请求成功" << std::endl;
 	else
-		std::cerr << "--->>>发送登出请求失败" << std::endl;
+		std::cout << "--->>>发送登出请求失败" << std::endl;
 }
 
 
 void CustomTradeSpi::reqSettlementInfoConfirm()
 {
+	std::cout << "reqSettlementInfoConfirm" << std::endl;
 	CThostFtdcSettlementInfoConfirmField settlementConfirmReq;
 	memset(&settlementConfirmReq, 0, sizeof(settlementConfirmReq));
 	strcpy(settlementConfirmReq.BrokerID, gBrokerID);
@@ -285,11 +303,12 @@ void CustomTradeSpi::reqSettlementInfoConfirm()
 	if (!rt)
 		std::cout << ">>>>>>发送投资者结算结果确认请求成功" << std::endl;
 	else
-		std::cerr << "--->>>发送投资者结算结果确认请求失败" << std::endl;
+		std::cout << "--->>>发送投资者结算结果确认请求失败" << std::endl;
 }
 
 void CustomTradeSpi::reqQueryInstrument()
 {
+	std::cout << "reqQueryInstrument" << std::endl;
 	CThostFtdcQryInstrumentField instrumentReq;
 	memset(&instrumentReq, 0, sizeof(instrumentReq));
 	strcpy(instrumentReq.InstrumentID, g_pTradeInstrumentID);
@@ -298,11 +317,12 @@ void CustomTradeSpi::reqQueryInstrument()
 	if (!rt)
 		std::cout << ">>>>>>发送合约查询请求成功" << std::endl;
 	else
-		std::cerr << "--->>>发送合约查询请求失败" << std::endl;
+		std::cout << "--->>>发送合约查询请求失败" << std::endl;
 }
 
 void CustomTradeSpi::reqQueryTradingAccount()
 {
+	std::cout << "reqQueryTradingAccount" << std::endl;
 	CThostFtdcQryTradingAccountField tradingAccountReq;
 	memset(&tradingAccountReq, 0, sizeof(tradingAccountReq));
 	strcpy(tradingAccountReq.BrokerID, gBrokerID);
@@ -313,11 +333,12 @@ void CustomTradeSpi::reqQueryTradingAccount()
 	if (!rt)
 		std::cout << ">>>>>>发送投资者资金账户查询请求成功" << std::endl;
 	else
-		std::cerr << "--->>>发送投资者资金账户查询请求失败" << std::endl;
+		std::cout << "--->>>发送投资者资金账户查询请求失败" << std::endl;
 }
 
 void CustomTradeSpi::reqQueryInvestorPosition()
 {
+	std::cout << "reqQueryInvestorPosition" << std::endl;
 	CThostFtdcQryInvestorPositionField postionReq;
 	memset(&postionReq, 0, sizeof(postionReq));
 	strcpy(postionReq.BrokerID, gBrokerID);
@@ -329,11 +350,12 @@ void CustomTradeSpi::reqQueryInvestorPosition()
 	if (!rt)
 		std::cout << ">>>>>>发送投资者持仓查询请求成功" << std::endl;
 	else
-		std::cerr << "--->>>发送投资者持仓查询请求失败" << std::endl;
+		std::cout << "--->>>发送投资者持仓查询请求失败" << std::endl;
 }
 
 void CustomTradeSpi::reqOrderInsert()
 {
+	std::cout << "reqOrderInsert" << std::endl;
 	CThostFtdcInputOrderField orderInsertReq;
 	memset(&orderInsertReq, 0, sizeof(orderInsertReq));
 	///经纪公司代码
@@ -376,7 +398,7 @@ void CustomTradeSpi::reqOrderInsert()
 	if (!rt)
 		std::cout << ">>>>>>发送报单录入请求成功" << std::endl;
 	else
-		std::cerr << "--->>>发送报单录入请求失败" << std::endl;
+		std::cout << "--->>>发送报单录入请求失败" << std::endl;
 }
 
 void CustomTradeSpi::reqOrderInsert(
@@ -385,6 +407,7 @@ void CustomTradeSpi::reqOrderInsert(
 	TThostFtdcVolumeType volume,
 	TThostFtdcDirectionType direction)
 {
+	std::cout << "reqOrderInsert" << std::endl;
 	CThostFtdcInputOrderField orderInsertReq;
 	memset(&orderInsertReq, 0, sizeof(orderInsertReq));
 	///经纪公司代码
@@ -427,11 +450,12 @@ void CustomTradeSpi::reqOrderInsert(
 	if (!rt)
 		std::cout << ">>>>>>发送报单录入请求成功" << std::endl;
 	else
-		std::cerr << "--->>>发送报单录入请求失败" << std::endl;
+		std::cout << "--->>>发送报单录入请求失败" << std::endl;
 }
 
 void CustomTradeSpi::reqOrderAction(CThostFtdcOrderField *pOrder)
 {
+	std::cout << "reqOrderAction" << std::endl;
 	static bool orderActionSentFlag = false; // 是否发送了报单
 	if (orderActionSentFlag)
 		return;
@@ -471,12 +495,13 @@ void CustomTradeSpi::reqOrderAction(CThostFtdcOrderField *pOrder)
 	if (!rt)
 		std::cout << ">>>>>>发送报单操作请求成功" << std::endl;
 	else
-		std::cerr << "--->>>发送报单操作请求失败" << std::endl;
+		std::cout << "--->>>发送报单操作请求失败" << std::endl;
 	orderActionSentFlag = true;
 }
 
 bool CustomTradeSpi::isMyOrder(CThostFtdcOrderField *pOrder)
 {
+	std::cout << "isMyOrder" << std::endl;
 	return ((pOrder->FrontID == trade_front_id) &&
 		(pOrder->SessionID == session_id) &&
 		(strcmp(pOrder->OrderRef, order_ref) == 0));
@@ -484,6 +509,7 @@ bool CustomTradeSpi::isMyOrder(CThostFtdcOrderField *pOrder)
 
 bool CustomTradeSpi::isTradingOrder(CThostFtdcOrderField *pOrder)
 {
+	std::cout << "isTradingOrder" << std::endl;
 	return ((pOrder->OrderStatus != THOST_FTDC_OST_PartTradedNotQueueing) &&
 		(pOrder->OrderStatus != THOST_FTDC_OST_Canceled) &&
 		(pOrder->OrderStatus != THOST_FTDC_OST_AllTraded));

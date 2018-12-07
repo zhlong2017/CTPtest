@@ -21,8 +21,9 @@ TThostFtdcPasswordType gInvesterPassword = "";                     // 投资者密码
 // 行情参数
 CThostFtdcMdApi *g_pMdUserApi = nullptr;                           // 行情指针
 char gMdFrontAddr[] = "tcp://180.168.146.187:10010";               // 模拟行情前置地址
-char *g_pInstrumentID[] = {"TF1706", "zn1705", "cs1801", "CF705"}; // 行情合约代码列表，中、上、大、郑交易所各选一种
-int instrumentNum = 4;                                             // 行情合约订阅数量
+//char gMdFrontAddr[] = "tcp://180.168.212.75:41213";  //Form Zhizhong
+char *g_pInstrumentID[] = {"TF1706", "zn1706","zn1705", "cs1801", "CF705","zn1902"}; // 行情合约代码列表，中、上、大、郑交易所各选一种
+int instrumentNum = 6;                                             // 行情合约订阅数量
 unordered_map<string, TickToKlineHelper> g_KlineHash;              // 不同合约的k线存储表
 
 // 交易参数
@@ -39,6 +40,10 @@ int main()
 	scanf("%s", gInvesterID);
 	cout << "请输入密码： ";
 	scanf("%s", gInvesterPassword);
+	//char id[] = "132440";
+	//char pwd[] = "Jiaqi@1010";
+	//strcpy(gInvesterID, id);
+	//strcpy(gInvesterPassword, pwd);
 
 	// 初始化行情线程
 	cout << "初始化行情..." << endl;
@@ -59,7 +64,7 @@ int main()
 	g_pTradeUserApi->SubscribePublicTopic(THOST_TERT_RESTART);    // 订阅公共流
 	g_pTradeUserApi->SubscribePrivateTopic(THOST_TERT_RESTART);   // 订阅私有流
 	g_pTradeUserApi->RegisterFront(gTradeFrontAddr);              // 设置交易前置地址
-	g_pTradeUserApi->Init();                                      // 连接运行
+	//g_pTradeUserApi->Init();                                      // 连接运行
 		
 
 	// 等到线程退出

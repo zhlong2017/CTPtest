@@ -31,23 +31,23 @@ void CustomMdSpi::OnFrontConnected()
 	if (!rt)
 		std::cout << ">>>>>>发送登录请求成功" << std::endl;
 	else
-		std::cerr << "--->>>发送登录请求失败" << std::endl;
+		std::cout << "--->>>发送登录请求失败" << std::endl;
 }
 
 // 断开连接通知
 void CustomMdSpi::OnFrontDisconnected(int nReason)
 {
 	std::cout << "OnFrontDisconnected" << std::endl;
-	std::cerr << "=====网络连接断开=====" << std::endl;
-	std::cerr << "错误码： " << nReason << std::endl;
+	std::cout << "=====网络连接断开=====" << std::endl;
+	std::cout << "错误码： " << nReason << std::endl;
 }
 
 // 心跳超时警告
 void CustomMdSpi::OnHeartBeatWarning(int nTimeLapse)
 {
 	std::cout << "OnHeartBeatWarning" << std::endl;
-	std::cerr << "=====网络心跳超时=====" << std::endl;
-	std::cerr << "距上次连接时间： " << nTimeLapse << std::endl;
+	std::cout << "=====网络心跳超时=====" << std::endl;
+	std::cout << "距上次连接时间： " << nTimeLapse << std::endl;
 }
 
 // 登录应答
@@ -71,10 +71,10 @@ void CustomMdSpi::OnRspUserLogin(
 		if (!rt)
 			std::cout << ">>>>>>发送订阅行情请求成功" << std::endl;
 		else
-			std::cerr << "--->>>发送订阅行情请求失败" << std::endl;
+			std::cout << "--->>>发送订阅行情请求失败" << std::endl;
 	}
 	else
-		std::cerr << "返回错误--->>> ErrorID=" << pRspInfo->ErrorID << ", ErrorMsg=" << pRspInfo->ErrorMsg << std::endl;
+		std::cout << "返回错误--->>> ErrorID=" << pRspInfo->ErrorID << ", ErrorMsg=" << pRspInfo->ErrorMsg << std::endl;
 }
 
 // 登出应答
@@ -93,7 +93,7 @@ void CustomMdSpi::OnRspUserLogout(
 		std::cout << "帐户名： " << pUserLogout->UserID << std::endl;
 	}
 	else
-		std::cerr << "返回错误--->>> ErrorID=" << pRspInfo->ErrorID << ", ErrorMsg=" << pRspInfo->ErrorMsg << std::endl;
+		std::cout << "返回错误--->>> ErrorID=" << pRspInfo->ErrorID << ", ErrorMsg=" << pRspInfo->ErrorMsg << std::endl;
 }
 
 // 错误通知
@@ -102,7 +102,7 @@ void CustomMdSpi::OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, b
 	std::cout << "OnRspError" << std::endl;
 	bool bResult = pRspInfo && (pRspInfo->ErrorID != 0);
 	if (bResult)
-		std::cerr << "返回错误--->>> ErrorID=" << pRspInfo->ErrorID << ", ErrorMsg=" << pRspInfo->ErrorMsg << std::endl;
+		std::cout << "返回错误--->>> ErrorID=" << pRspInfo->ErrorID << ", ErrorMsg=" << pRspInfo->ErrorMsg << std::endl;
 }
 
 // 订阅行情应答
@@ -146,7 +146,7 @@ void CustomMdSpi::OnRspSubMarketData(
 		outFile.close();
 	}
 	else
-		std::cerr << "返回错误--->>> ErrorID=" << pRspInfo->ErrorID << ", ErrorMsg=" << pRspInfo->ErrorMsg << std::endl;
+		std::cout << "返回错误--->>> ErrorID=" << pRspInfo->ErrorID << ", ErrorMsg=" << pRspInfo->ErrorMsg << std::endl;
 }
 
 // 取消订阅行情应答
@@ -164,7 +164,7 @@ void CustomMdSpi::OnRspUnSubMarketData(
 		std::cout << "合约代码： " << pSpecificInstrument->InstrumentID << std::endl;
 	}
 	else
-		std::cerr << "返回错误--->>> ErrorID=" << pRspInfo->ErrorID << ", ErrorMsg=" << pRspInfo->ErrorMsg << std::endl;
+		std::cout << "返回错误--->>> ErrorID=" << pRspInfo->ErrorID << ", ErrorMsg=" << pRspInfo->ErrorMsg << std::endl;
 }
 
 // 订阅询价应答
@@ -182,7 +182,7 @@ void CustomMdSpi::OnRspSubForQuoteRsp(
 		std::cout << "合约代码： " << pSpecificInstrument->InstrumentID << std::endl;
 	}
 	else
-		std::cerr << "返回错误--->>> ErrorID=" << pRspInfo->ErrorID << ", ErrorMsg=" << pRspInfo->ErrorMsg << std::endl;
+		std::cout << "返回错误--->>> ErrorID=" << pRspInfo->ErrorID << ", ErrorMsg=" << pRspInfo->ErrorMsg << std::endl;
 }
 
 // 取消订阅询价应答
@@ -196,7 +196,7 @@ void CustomMdSpi::OnRspUnSubForQuoteRsp(CThostFtdcSpecificInstrumentField *pSpec
 		std::cout << "合约代码： " << pSpecificInstrument->InstrumentID << std::endl;
 	}
 	else
-		std::cerr << "返回错误--->>> ErrorID=" << pRspInfo->ErrorID << ", ErrorMsg=" << pRspInfo->ErrorMsg << std::endl;
+		std::cout << "返回错误--->>> ErrorID=" << pRspInfo->ErrorID << ", ErrorMsg=" << pRspInfo->ErrorMsg << std::endl;
 }
 
 // 行情详情通知
@@ -217,7 +217,8 @@ void CustomMdSpi::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMar
 	std::ofstream outFile;
 	outFile.open(filePath, std::ios::app); // 文件追加写入
 	outFile << pDepthMarketData->InstrumentID << ","
-			<< pDepthMarketData->UpdateTime << "." << pDepthMarketData->UpdateMillisec << ","
+			//<< pDepthMarketData->UpdateTime << "." << pDepthMarketData->UpdateMillisec << ","
+			<< pDepthMarketData->UpdateTime <<  ","
 			<< pDepthMarketData->LastPrice << ","
 			<< pDepthMarketData->Volume << ","
 			<< pDepthMarketData->BidPrice1 << ","
@@ -239,7 +240,7 @@ void CustomMdSpi::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMar
 	//if (!rt)
 	//	std::cout << ">>>>>>发送取消订阅行情请求成功" << std::endl;
 	//else
-	//	std::cerr << "--->>>发送取消订阅行情请求失败" << std::endl;
+	//	std::cout << "--->>>发送取消订阅行情请求失败" << std::endl;
 }
 
 // 询价详情通知
